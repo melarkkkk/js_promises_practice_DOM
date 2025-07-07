@@ -32,17 +32,23 @@ const firstPromise = new Promise((resolve, reject) => {
 });
 
 const secondPromise = new Promise((resolve) => {
+  let settled = false;
+
   const handleClick = (e) => {
-    if (e.button === 0) {
+    if (e.button === 0 && !settled) {
+      settled = true;
       resolve('Second promise was resolved');
       cleanup();
     }
   };
 
   const handleRightClick = (e) => {
-    e.preventDefault();
-    resolve('Second promise was resolved');
-    cleanup();
+    if (!settled) {
+      settled = true;
+      e.preventDefault();
+      resolve('Second promise was resolved');
+      cleanup();
+    }
   };
 
   const cleanup = () => {
